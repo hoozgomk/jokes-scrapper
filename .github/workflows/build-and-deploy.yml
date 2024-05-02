@@ -46,8 +46,7 @@ name: Build and Deploy to Cloud Run
 
 on:
   push:
-    branches: [ "dev" ]
-    branches: [ "master" ]
+    branches: [ "dev", "master" ]
 
 env:
   PROJECT_ID: jokes-scrapper
