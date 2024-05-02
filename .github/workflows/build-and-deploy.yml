@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Google Auth
         id: auth
@@ -31,7 +31,7 @@ jobs:
         id: docker-auth
         uses: docker/login-action@v3
         with:
-          registry: gcr.io
+          registry: us-central1-docker.pkg.dev
           username: _json_key
           password: ${{ secrets.GCP_AR_SA_KEY }}
 
