@@ -21,11 +21,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-       - name: Google Auth
-         id: auth
-         uses: 'google-github-actions/auth@v0'
-         with:
-           credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
+      - name: Google Auth
+        id: auth
+        uses: 'google-github-actions/auth@v0'
+        with:
+          credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
 
       - name: Docker Auth
         id: docker-auth
