@@ -49,9 +49,10 @@ jobs:
           host: 34.122.153.132
           username: github
           key: ${{ secrets.SSH_PRIVATE_KEY }}
+          envs: AR_JSON=${{ secrets.GCP_AR_SA_KEY }}
           script: |
-            echo ${{ secrets.GCP_AR_SA_KEY }} > key.json
-            docker login -u _json_key --password-stdin us-central1-docker.pkg.dev/jokes-scrapper < key.json
+            echo "$AR_JSON" > ar_key.json
+            docker login -u _json_key --password-stdin us-central1-docker.pkg.dev/jokes-scrapper < ar_key.json
 
       - name: Run Container on VM
         uses: appleboy/ssh-action@master
