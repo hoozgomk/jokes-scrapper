@@ -9,6 +9,7 @@ env:
   GAR_LOCATION: us-central1
   SERVICE: jokes-scrapper
   REGION: us-central1
+  ZONE: us-central1-a
   VM_INSTANCE_NAME: jokes-scrapper-vm
 
 jobs:
@@ -41,9 +42,10 @@ jobs:
           docker build -t "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.SERVICE }}/${{ env.SERVICE }}:${{ github.sha }}" ./
           docker push "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.SERVICE }}/${{ env.SERVICE }}:${{ github.sha }}"
 
-      - name: Update Container on VM
+      - name: SSH into VM and Deploy Docker Image
         run: |
           gcloud compute instances update-container ${VM_INSTANCE_NAME} \
+            --zone=${ZONE} \
             --container-image "${GAR_LOCATION}-docker.pkg.dev/${PROJECT_ID}/${SERVICE}/${SERVICE}:${{ github.sha }}" \
             --container-env "PORT=8000" \
             --container-restart-policy always
