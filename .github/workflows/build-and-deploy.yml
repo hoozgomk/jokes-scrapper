@@ -57,7 +57,7 @@ jobs:
 
       - name: Run Docker image on VM
         run: |
-          ssh github@$34.122.153.132 \
+          ssh github@34.122.153.132 \
           'docker run -d -p 8000:8000 "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.SERVICE }}/${{ env.SERVICE }}:${{ github.sha }}"'
 
 #      # Deploy Docker Container to VM
