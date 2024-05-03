@@ -3,6 +3,7 @@ name: Build, Push, and Deploy to VM
 on:
   push:
     branches: [ "dev" ]
+  workflow_dispatch:
 
 env:
   PROJECT_ID: jokes-scrapper
