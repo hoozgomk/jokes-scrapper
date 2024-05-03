@@ -50,7 +50,7 @@ jobs:
           username: github
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            echo "Logged in successfully"
+            ls -l
 
       # Deploy Docker Container to VM
       - name: Deploy Docker Container to VM
