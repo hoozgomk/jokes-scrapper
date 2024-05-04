@@ -61,7 +61,7 @@ jobs:
           gcloud compute instances update-container jokes-scrapper-vm \
             --zone us-central1-a \
             --container-image "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.SERVICE }}/${{ env.SERVICE }}:${{ github.sha }}" \
-            --container-env-var PORT=8000
+            --container-env PORT=8000
 
 #      - name: Get VM External IP
 #        id: get_ip
