@@ -50,28 +50,39 @@ jobs:
           service_account_key: ${{ secrets.GCP_AR_SA_KEY }}
           export_default_credentials: true
 
-      - name: Authenticate with Artifact Registry
-        run: gcloud auth configure-docker "${{ env.GAR_LOCATION }}-docker.pkg.dev"
-
-      - name: Pull Docker Image from Artifact Registry
-        run: docker pull "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.SERVICE }}/${{ env.SERVICE }}:${{ github.sha }}"
-
-      - name: Deploy Image to VM Instance
+      - name: Get VM External IP
+        id: get_ip
         run: |
-          gcloud compute instances update-container jokes-scrapper-vm \
-            --zone us-central1-a \
-            --container-image "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.SERVICE }}/${{ env.SERVICE }}:${{ github.sha }}" \
-            --container-env PORT=8000
+          EXTERNAL_IP=$(gcloud compute instances describe $VM_INSTANCE_NAME --zone $ZONE --format='get(networkInterfaces[0].accessConfigs[0].natIP)')
+          echo "::set-output name=external_ip::$EXTERNAL_IP"
 
-#      - name: Get VM External IP
-#        id: get_ip
-#        run: |
-#          EXTERNAL_IP=$(gcloud compute instances describe $VM_INSTANCE_NAME --zone us-central1-a --format='get(networkInterfaces[0].accessConfigs[0].natIP)')
-#          echo "::set-output name=external_ip::$EXTERNAL_IP"
+      - name: Display VM External IP
+        run: |
+          echo "VM External IP: ${{ steps.get_ip.outputs.external_ip }}"
+
+      - name: Log in to VM and verify
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ steps.get_ip.outputs.external_ip }}"
+          username: github
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            echo "Logged in successfully"
+
+#      - name: Authenticate with Artifact Registry
+#        run: gcloud auth configure-docker "${{ env.GAR_LOCATION }}-docker.pkg.dev"
 #
-#      - name: Display VM External IP
+#      - name: Pull Docker Image from Artifact Registry
+#        run: docker pull "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.SERVICE }}/${{ env.SERVICE }}:${{ github.sha }}"
+#
+#      - name: Deploy Image to VM Instance
 #        run: |
-#          echo "VM External IP: ${{ steps.get_ip.outputs.external_ip }}"
+#          gcloud compute instances update-container jokes-scrapper-vm \
+#            --zone us-central1-a \
+#            --container-image "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.SERVICE }}/${{ env.SERVICE }}:${{ github.sha }}" \
+#            --container-env PORT=8000
+
+
 
 #      # Add the public key to the VM
 #      - name: Add public key to VM
