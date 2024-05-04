@@ -47,7 +47,7 @@ jobs:
       - name: Add public key to VM
         uses: appleboy/ssh-action@master
         with:
-          host: 34.122.153.132
+          host: 34.121.70.197
           username: github
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
