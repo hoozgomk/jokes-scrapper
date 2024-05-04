@@ -78,7 +78,8 @@ jobs:
           envs: AR_JSON=${{ secrets.GCP_AR_SA_KEY }}
           script: |
             echo "$AR_JSON" > ar_key.json
-            docker login -u _json_key --password-stdin us-central1-docker.pkg.dev/jokes-scrapper < ar_key.json
+            docker login -u _json_key --password "$AR_JSON" us-central1-docker.pkg.dev/jokes-scrapper
+
 
 #      - name: Authenticate with Artifact Registry
 #        run: gcloud auth configure-docker "${{ env.GAR_LOCATION }}-docker.pkg.dev"
