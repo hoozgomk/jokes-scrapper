@@ -52,13 +52,14 @@ jobs:
         run: |
           docker build -t "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.SERVICE }}/${{ env.SERVICE }}:${{ github.sha }}" ./
           docker push "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.SERVICE }}/${{ env.SERVICE }}:${{ github.sha }}"
-          docker save -o jokes-scrapper.tar "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.SERVICE }}/${{ env.SERVICE }}:${{ github.sha }}"
-      - name: Set up Google Cloud SDK
-        uses: google-github-actions/setup-gcloud@v2
-        with:
-          project_id: ${{ env.PROJECT_ID }}
-          service_account_key: ${{ secrets.GCP_AR_SA_KEY }}
-          export_default_credentials: true
+          docker save -o /tmp/jokes-scrapper.tar "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.SERVICE }}/${{ env.SERVICE }}:${{ github.sha }}"
+
+#      - name: Set up Google Cloud SDK
+#        uses: google-github-actions/setup-gcloud@v2
+#        with:
+#          project_id: ${{ env.PROJECT_ID }}
+#          service_account_key: ${{ secrets.GCP_AR_SA_KEY }}
+#          export_default_credentials: true
 
 #      - name: Log in to VM and verify
 #        uses: appleboy/ssh-action@master
@@ -75,7 +76,7 @@ jobs:
           host: ${{ steps.get_ip.outputs.external_ip }}
           username: ${{ secrets.VM_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: ./jokes-scrapper.tar
+          source: ./tmp/jokes-scrapper.tar
           target: /tmp/jokes-scrapper.tar
 
       - name: Load Docker image on VM
