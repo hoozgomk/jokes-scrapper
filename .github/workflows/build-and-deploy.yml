@@ -2,11 +2,12 @@ name: Build, Push, and Deploy to VM
 
 on:
   push:
-    branches: [ "dev" ]
+    branches: [ "dev", "master" ]
   workflow_dispatch:
 
 env:
   PROJECT_ID: jokes-scrapper
+  GAR_LOCATION: us-central1
   SERVICE: jokes-scrapper
   REGION: us-central1
   ZONE: us-central1-a
@@ -14,10 +15,6 @@ env:
 
 jobs:
   deploy:
-    permissions:
-      contents: 'read'
-      id-token: 'write'
-
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
