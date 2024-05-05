@@ -55,6 +55,12 @@ jobs:
           docker save -o /tmp/jokes-scrapper.tar "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.SERVICE }}/${{ env.SERVICE }}:${{ github.sha }}"
           ls -l /tmp
 
+      - name: Extract Docker image from tar file
+        run: |
+          mkdir -p /tmp/extracted-image
+          tar -xvf /tmp/jokes-scrapper.tar -C /tmp/extracted-image
+          ls -l /tmp/extracted-image
+
 #      - name: Set up Google Cloud SDK
 #        uses: google-github-actions/setup-gcloud@v2
 #        with:
