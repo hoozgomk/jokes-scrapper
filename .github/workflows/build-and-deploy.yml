@@ -77,7 +77,7 @@ jobs:
           host: ${{ steps.get_ip.outputs.external_ip }}
           username: ${{ secrets.VM_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: ./tmp/jokes-scrapper.tar
+          source: /tmp/jokes-scrapper.tar
           target: /tmp/jokes-scrapper.tar
 
       - name: Load Docker image on VM
