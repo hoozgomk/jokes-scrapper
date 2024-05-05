@@ -5,19 +5,9 @@ on:
     branches: [ "dev" ]
   workflow_dispatch:
 
-env:
-  PROJECT_ID: jokes-scrapper
-  GAR_LOCATION: us-central1
-  SERVICE: jokes-scrapper
-  REGION: us-central1
-  ZONE: us-central1-a
-  VM_INSTANCE_NAME: jokes-scrapper-vm
 
 jobs:
   deploy:
-    permissions:
-      contents: 'read'
-      id-token: 'write'
 
     runs-on: ubuntu-latest
     steps:
