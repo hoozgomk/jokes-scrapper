@@ -45,14 +45,19 @@ jobs:
           docker build -t "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.SERVICE }}/${{ env.SERVICE }}:${{ github.sha }}" ./
           docker push "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.SERVICE }}/${{ env.SERVICE }}:${{ github.sha }}"
 
-      - name: Log in to VM and verify
+      - name: Authenticate to Artifact Registry from VM
         uses: appleboy/ssh-action@master
+        env:
+          AR_SA_KEY: "${{ secrets.GCP_AR_SA_KEY }}"
         with:
           host: ${{ steps.get_ip.outputs.external_ip }}
           username: github
           key: ${{ secrets.SSH_PRIVATE_KEY }}
+          request_pty: true
+          envs: AR_SA_KEY
           script: |
-            echo "Logged in successfully"
+            echo $AR_SA_KEY > ar_key.json
+            docker login -u _json_key --password-stdin us-central1-docker.pkg.dev/jokes-scrapper < ar_key.json
 
       - name: Run Container on VM
         uses: appleboy/ssh-action@master
