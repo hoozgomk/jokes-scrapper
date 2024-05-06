@@ -61,9 +61,8 @@ jobs:
           username: github
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           request_pty: true
-          envs: AR_JSON=${{ secrets.GCP_AR_SA_KEY }}
           script: |
-            echo "$AR_JSON" > ar_key.json
+            echo ${{ secrets.GCP_AR_SA_KEY }} > ar_key.json
             cat ar_key.json
             docker login -u _json_key --password-stdin us-central1-docker.pkg.dev/jokes-scrapper < ar_key.json
 
