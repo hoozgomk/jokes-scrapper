@@ -54,6 +54,18 @@ jobs:
           script: |
             echo "Logged in successfully"
 
+      - name: Authenticate to Artifact Registry from VM
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ steps.get_ip.outputs.external_ip }}
+          username: github
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          request_pty: true
+          envs: AR_JSON=${{ secrets.GCP_AR_SA_KEY }}
+          script: |
+            echo "$AR_JSON" > ar_key.json
+            docker login -u _json_key --password-stdin us-central1-docker.pkg.dev/jokes-scrapper < ar_key.json
+
       - name: Run Container on VM
         uses: appleboy/ssh-action@master
         with:
