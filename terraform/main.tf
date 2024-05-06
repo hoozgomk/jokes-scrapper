@@ -50,12 +50,6 @@ resource "google_compute_instance" "jokes_scrapper_vm" {
     }
   }
 
-# Assign custom Service Account to authorize VM to Artifact Registry
-  service_account {
-    email  = "artifact-registry-reader@jokes-scrapper.iam.gserviceaccount.com"
-    scopes = ["cloud-platform"]
-  }
-
 # Add public SSH key to enable SSH connection to VM from GitHub Actions
   metadata = {
     "ssh-keys" = <<EOT
