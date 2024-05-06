@@ -64,6 +64,7 @@ jobs:
           envs: AR_JSON=${{ secrets.GCP_AR_SA_KEY }}
           script: |
             echo "$AR_JSON" > ar_key.json
+            cat ar_key.json
             docker login -u _json_key --password-stdin us-central1-docker.pkg.dev/jokes-scrapper < ar_key.json
 
       - name: Run Container on VM
