@@ -2,6 +2,10 @@ variable "credentials_file" {
   description = "Path to the Google Cloud service account credentials JSON file"
 }
 
+variable "public_key_file" {
+  description = "Path to the public SSH key file"
+}
+
 provider "google" {
   credentials = file(var.credentials_file)
   project     = "jokes-scrapper"
@@ -50,12 +54,10 @@ resource "google_compute_instance" "jokes_scrapper_vm" {
     }
   }
 
-# Add public SSH key to enable SSH connection to VM from GitHub Actions
-  metadata = {
-    "ssh-keys" = <<EOT
-      github:ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQC9qXXNhBJlVrypZcsOoOTiQrIGzysPMjixGwFEfIZmsWr4wRyODs4CPyp8Pswis8Ofjxt8f6Qnsww5DX1uRjfWdJ265l1gt8GwzFhdAOB/CDKy7gt6+u81lIksNcJ4X6kHxminMuDsQVyP87NERlqjPyjQ9OD3+rnbBEGea68hzDIkWsDjET0wG48gVfedkeoS7jIVHkd8FQ4gsyilxf4gRSghKP7okEkupv4thGwf5tLsDlCoJ1SkRYl3terCyB1m6qdd5lmX0vwcNu/emLdy8tZhpswIK3Miw+b41o4evGNQcxAKR7prcXf4Fu8nIrN4PZElywQBRiIsjEm7aPmNdoTD4/NcdUcH75rlrIySA1FtRWGVgFsC3vErhzAOqqPjmr2XVNTfCjPu9RTEXt0/D5AbJc4zvvjD0JgTSqxSbrfzIR6F8A2087uXortnOgApdAREcoYJE59iRuEgnNzEWD6W/c/wvYB9c7GOB2XHHcmZ4/W+GFz0tirzt3rnkmudLcaa5d/TKJO7SI3Pw4nK4YcEv+d2x59nWCq2M5xEkpVdvtPA6u7mgCvWSGQkXOUbJS5e9ftIQXPAeV9whmhfUhQR1luwed9DltjaLbPcmZBd4Mg+uUEyE82o1Lwk7XycTN+WBe6/HYAeMPNr+r65cjqrzYj7m7trqPx5HuwSAQ== jokes-scrapper
-     EOT
-  }
+# Read SSH public key from file and add it to the VM
+metadata = {
+  "ssh-keys" = "github:${file(var.public_key_file)}"
+}
 }
 
 # Allow to access application port
@@ -71,7 +73,7 @@ resource "google_compute_firewall" "allow_app" {
   source_ranges = ["0.0.0.0/0"]
 }
 
-# Allow to SSH to VM
+# Allow SSH to VM
 resource "google_compute_firewall" "allow_ssh" {
   name    = "allow-ssh"
   network = google_compute_network.jokes_scrapper_vpc.id
